@@ -45,7 +45,7 @@ I can help you fetch Gurbani right from Telegram.
 You can always user \`/help@GurbaniBot\` to bring this information again.
 Contact @bogas04 in case of any issue.
   `)
-  .then(() => bot.sendPhoto(id, 'http://www.jattsite.com/infos/infosbilder/03a-anlmolLipi-key-map.jpg'))
+  .then(() => bot.sendPhoto(id, 'https://www.sikhitothemax.org/assets/images/help/web-desktop-keyboard-map.png'))
 );
 
 bot.on('message', ({ chat: { id } }) => bot.sendMessage(id, 'Loading...\nUse /help for more info.'));
