@@ -11,11 +11,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@sttm/banidb": "^1.1.0",
     "khajana": "^1.0.0",
-    "node-fetch": "^1.7.2",
+    "node-fetch": "^2.0.0",
     "node-telegram-bot-api": "^0.28.0"
   },
   "devDependencies": {
-    "now": "^7.4.0"
+    "now": "^11.0.0"
   }
 }

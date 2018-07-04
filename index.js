@@ -1,31 +1,41 @@
-const TelegramBot = require('node-telegram-bot-api');
-const { granthLabels, khajana, toSearchResults, toShabad, toAngParts } = require('./util');
+const TelegramBot = require("node-telegram-bot-api");
+const {
+  granthLabels,
+  khajana,
+  toSearchResults,
+  toShabad,
+  toAngParts
+} = require("./util");
 
-const TOKEN = '<INSERT-YOUR-TOKEN-HERE>';
+const TOKEN = process.env.TELEGRAM_TOKEN;
 const bot = new TelegramBot(TOKEN, { polling: true });
 
-bot.onText(/\/(sggs|dg)(\d+)/, ({ chat: { id } }, [string, granth, ang]) =>
-  khajana({ ang, source: granthLabels[granth] })
-    .then(shabad => {
-      const [meta, part1, part2] = toAngParts(shabad);
-      bot.sendMessage(id, meta);
-      bot
-        .sendMessage(id, part1)
-        .then(() => bot.sendMessage(id, part2));
-    })
-);
+bot.onText(/\/(sggs|dg)(\d+)/, ({ chat: { id } }, [string, granth, ang]) => {
+  console.log(`Loading ${granth}:${ang}`);
+  khajana({ ang, source: granthLabels[granth] }).then(shabad => {
+    const [meta, part1, part2] = toAngParts(shabad);
+    bot.sendMessage(id, meta);
+    bot.sendMessage(id, part1).then(() => bot.sendMessage(id, part2));
+  });
+});
 
-bot.onText(/\/s(\d+)/, ({ chat: { id: chatId } }, [string, id]) => khajana({ id })
-  .then(shabad => bot.sendMessage(chatId, toShabad(shabad)))
-);
+bot.onText(/\/s(\d+)/, ({ chat: { id: chatId } }, [string, id]) => {
+  console.log(`Loading shabad ${id}`);
+  khajana({ id }).then(shabad => bot.sendMessage(chatId, toShabad(shabad)));
+});
 
-bot.onText(/\/search (.+)/, ({ chat: { id } }, [string, q]) =>
-  khajana({ q, source: 'all', type: 1 })
-    .then(({ shabads }) => bot.sendMessage(id, toSearchResults(shabads)))
-);
+bot.onText(/\/search (.+)/, ({ chat: { id } }, [string, q]) => {
+  console.log(`Loading search results of ${q}`);
+  khajana({ q, source: "all", type: 1 }).then(({ shabads }) => {
+    bot.sendMessage(id, toSearchResults(shabads));
+  });
+});
 
-bot.onText(/\/help/, ({ chat: { id } }) => bot
-  .sendMessage(id, `
+bot.onText(/\/help/, ({ chat: { id } }) =>
+  bot
+    .sendMessage(
+      id,
+      `
 ਵਾਹਿਗੁਰੂ ਜੀ ਕਾ ਖਾਲਸਾ
 ਵਾਹਿਗੁਰੂ ਜੀ ਕੀ ਫਤਹਿ
 
@@ -44,8 +54,16 @@ I can help you fetch Gurbani right from Telegram.
 
 You can always user \`/help@SikhJSBot\` to bring this information again.
 Contact @bogas04 in case of any issue.
-  `)
-  .then(() => bot.sendPhoto(id, 'http://www.jattsite.com/infos/infosbilder/03a-anlmolLipi-key-map.jpg'))
+  `
+    )
+    .then(() =>
+      bot.sendPhoto(
+        id,
+        "http://www.jattsite.com/infos/infosbilder/03a-anlmolLipi-key-map.jpg"
+      )
+    )
 );
 
-bot.on('message', ({ chat: { id } }) => bot.sendMessage(id, 'Loading...\nUse /help for more info.'));
+bot.on("message", ({ chat: { id } }) =>
+  bot.sendMessage(id, "Loading...\nUse /help for more info.")
+);
