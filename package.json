@@ -1,15 +1,15 @@
 {
-  "name": "sttm-telegram",
+  "name": "@sttm/telegram-bot",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index",
-    "deploy": "now rm sttm-telegram && now --public"
+    "deploy": "now rm sttm-bot && now --public"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "khajana": "^1.0.0",
     "node-fetch": "^1.7.2",
