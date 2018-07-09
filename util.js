@@ -3,23 +3,23 @@ const { buildApiUrl, SOURCES } = require("@sttm/banidb");
 
 const granthLabels = { sggs: "G", dg: "D" };
 
-const khajana = options => fetch(buildApiUrl(options)).then(r => r.json());
+const baniDB = options => fetch(buildApiUrl(options)).then(r => r.json());
 
 const toLine = shabad =>
-  [shabad.gurbani.unicode, shabad.translation.english.ssk].join("\n    ");
+  [shabad.gurbani.unicode, `_${shabad.translation.english.ssk}_`].join(
+    "\n    "
+  );
 
 const toSearchResult = shabad => `
-${shabad.source.english}:${shabad.pageno} - ${shabad.writer.english}
+🔵 ${shabad.source.english}:${shabad.pageno} - ${shabad.writer.english} /s${
+  shabad.shabadid
+}
 
-${toLine(shabad)}
-
-/s${shabad.shabadid}
-`;
+${toLine(shabad)}`;
 
 const toSearchResults = shabads => `
 Found ${shabads.length} results.
-
-${shabads.map(s => toSearchResult(s.shabad)).join("\n\n")}
+${shabads.map(s => toSearchResult(s.shabad)).join("\n")}
 `;
 
 const toShabad = ({ shabadinfo: shabad, gurbani }) => `
@@ -44,7 +44,7 @@ const toAngParts = ({ page, source: { english: source, pageno } }) => [
 
 module.exports = {
   granthLabels,
-  khajana,
+  baniDB,
   toLine,
   toSearchResult,
   toSearchResults,

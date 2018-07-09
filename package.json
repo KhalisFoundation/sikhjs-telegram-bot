@@ -5,18 +5,14 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index",
-    "deploy": "now rm sttm-bot && now --public"
+    "start": "pm2 start process.json"
   },
   "author": "",
   "license": "MIT",
   "dependencies": {
     "@sttm/banidb": "^1.1.0",
-    "khajana": "^1.0.0",
     "node-fetch": "^2.0.0",
-    "node-telegram-bot-api": "^0.28.0"
-  },
-  "devDependencies": {
-    "now": "^11.0.0"
+    "node-telegram-bot-api": "^0.30.0",
+    "pm2": "^3.0.0"
   }
 }
