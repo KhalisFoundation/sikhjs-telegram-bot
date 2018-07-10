@@ -5,10 +5,13 @@ const granthLabels = { sggs: "G", dg: "D" };
 
 const baniDB = options => fetch(buildApiUrl(options)).then(r => r.json());
 
-const toLine = shabad =>
-  [shabad.gurbani.unicode, `_${shabad.translation.english.ssk}_`].join(
-    "\n    "
-  );
+const toLine = (shabad, formatting = true) =>
+  [
+    shabad.gurbani.unicode,
+    formatting
+      ? `_${shabad.translation.english.ssk}_`
+      : shabad.translation.english.ssk
+  ].join("\n    ");
 
 const toSearchResult = shabad => `
 🔵 ${shabad.source.english}:${shabad.pageno} - ${shabad.writer.english} /s${
@@ -30,6 +33,12 @@ ${gurbani.map(({ shabad }) => toLine(shabad)).join("\n\n")}
 /s${shabad.id}
 `;
 
+const toAng = ({ page, source: { english: source, pageno, id } }) => [
+  `${source} ${pageno}`,
+  page.map(({ shabad }) => toLine(shabad, false)).join("\n\n"),
+  { source, pageno, id }
+];
+
 const toAngParts = ({ page, source: { english: source, pageno } }) => [
   `${source} ${pageno}`,
   page
@@ -42,12 +51,31 @@ const toAngParts = ({ page, source: { english: source, pageno } }) => [
     .join("\n\n")
 ];
 
+const prepareMessageText = ({ prefix, text, suffix, limit = 4096 }) =>
+  `${prefix}\n\n${text.slice(
+    0,
+    limit - prefix.length - suffix.length - 10
+  )}...${suffix}`;
+
+const toShabadURL = shabad =>
+  `https://www.sikhitothemax.org/shabad?id=${shabad.shabadid}&highlight=${
+    shabad.id
+  }`;
+
+const toAngURL = (ang, id) =>
+  `https://www.sikhitothemax.org/ang?ang=${ang}&source=${id}`;
+
 module.exports = {
+  toAngURL,
+  toShabadURL,
+  prepareMessageText,
+  SOURCES,
   granthLabels,
   baniDB,
   toLine,
   toSearchResult,
   toSearchResults,
   toShabad,
+  toAng,
   toAngParts
 };
