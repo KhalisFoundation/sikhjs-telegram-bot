@@ -187,8 +187,16 @@ bot.onText(
 
 bot.onText(/\/s(\d+)/, async ({ chat: { id: chatId } }, [string, id]) => {
   console.log(`Loading shabad "${id}"`);
-  const shabad = await baniDB({ id });
-  bot.sendMessage(chatId, toShabad(shabad), { parse_mode });
+  try {
+    const shabad = await baniDB({ id });
+    bot.sendMessage(chatId, toShabad(shabad), { parse_mode });
+  } catch (err) {
+    bot.sendMessage(
+      chatId,
+      `Sorry we couldn't get the shabad. Try reading it on the [website](https://sttm.co/s/${id}).`,
+      { parse_mode }
+    );
+  }
 });
 
 bot.onText(/\/search (.+)/, async ({ chat: { id } }, [string, q]) => {
